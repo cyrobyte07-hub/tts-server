@@ -1,4 +1,3 @@
 flask
 edge-tts
 gunicorn
-ffmpeg-python
