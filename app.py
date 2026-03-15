@@ -1,3 +1,8 @@
+import imageio
+imageio.plugins.ffmpeg.download()
+import imageio_ffmpeg
+import os
+os.environ["PATH"] += os.pathsep + os.path.dirname(imageio_ffmpeg.get_ffmpeg_exe())
 from flask import Flask, request, send_file, jsonify
 import edge_tts
 import asyncio
