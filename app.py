@@ -1,13 +1,11 @@
-import imageio
-imageio.plugins.ffmpeg.download()
 import imageio_ffmpeg
 import os
 os.environ["PATH"] += os.pathsep + os.path.dirname(imageio_ffmpeg.get_ffmpeg_exe())
-from flask import Flask, request, send_file, jsonify
+
+from flask import Flask, request, send_file
 import edge_tts
 import asyncio
 import tempfile
-import os
 import subprocess
 import urllib.request
 
@@ -42,24 +40,20 @@ def render():
 
     tmp_dir = tempfile.mkdtemp()
 
-    # Download audio
     audio_path = os.path.join(tmp_dir, 'audio.mp3')
     urllib.request.urlretrieve(audio_url, audio_path)
 
-    # Download videos
     video_paths = []
     for i, v in enumerate(video_urls):
         vpath = os.path.join(tmp_dir, f'clip_{i}.mp4')
         urllib.request.urlretrieve(v['url'], vpath)
         video_paths.append(vpath)
 
-    # Create file list for FFmpeg
     list_path = os.path.join(tmp_dir, 'list.txt')
     with open(list_path, 'w') as f:
         for vp in video_paths:
             f.write(f"file '{vp}'\n")
 
-    # Concatenate videos
     concat_path = os.path.join(tmp_dir, 'concat.mp4')
     subprocess.run([
         'ffmpeg', '-f', 'concat', '-safe', '0',
@@ -68,7 +62,6 @@ def render():
         concat_path
     ], check=True)
 
-    # Merge with audio
     output_path = os.path.join(tmp_dir, 'final.mp4')
     subprocess.run([
         'ffmpeg',
