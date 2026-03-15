@@ -1,3 +1,6 @@
 flask
 edge-tts
 gunicorn
+imageio[ffmpeg]
+ffmpeg-python
+imageio
