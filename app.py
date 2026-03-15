@@ -32,6 +32,13 @@ def tts():
 
     return send_file(output_path, mimetype='audio/mpeg', as_attachment=True, download_name='voiceover.mp3')
 
+def download_file(url, path):
+    req = urllib.request.Request(url, headers={
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    })
+    with urllib.request.urlopen(req) as response, open(path, 'wb') as out_file:
+        out_file.write(response.read())
+
 @app.route('/render', methods=['POST'])
 def render():
     data = request.json
@@ -50,11 +57,11 @@ def render():
 
     asyncio.run(generate_audio())
 
-    # Download video clips
+    # Download video clips with proper headers
     video_paths = []
     for i, v in enumerate(video_urls):
         vpath = os.path.join(tmp_dir, f'clip_{i}.mp4')
-        urllib.request.urlretrieve(v['url'], vpath)
+        download_file(v['url'], vpath)
         video_paths.append(vpath)
 
     # Create concat list for FFmpeg
