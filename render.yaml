@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: tts-server
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+```
+
+---
+
+## Step 2 — Deploy on Render
+
+1. Go back to Render dashboard
+2. Click **"New"** → **"Web Service"**
+3. Connect your GitHub account and select the `tts-server` repo
+4. Render will auto-detect everything — just click **"Deploy"**
+5. Wait about 2 minutes for it to build
+6. Once done you'll get a URL like `https://tts-server-xxxx.onrender.com`
+
+**Copy that URL** — you'll need it in n8n.
+
+---
+
+## Step 3 — Add HTTP Request node in n8n
+
+Back in n8n, click **"+"** after your Code node, add another **HTTP Request** node and fill it in:
+
+**Method:** `POST`
+
+**URL:**
+```
+https://your-render-url.onrender.com/tts
