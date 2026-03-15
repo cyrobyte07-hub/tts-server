@@ -22,9 +22,3 @@ def tts():
     asyncio.run(generate())
     
     return send_file(output_path, mimetype='audio/mpeg', as_attachment=True, download_name='voiceover.mp3')
-```
-
-**5.** Create another file called `requirements.txt` and paste:
-```
-flask
-edge-tts
